@@ -1,0 +1,17 @@
+---
+title: "About"
+image: me_glasses.jpg
+about:
+  template: jolla
+  links:
+    - icon: linkedin
+      text: LinkedIn
+      href: https://www.linkedin.com/in/mark-cassar-b08866260/
+    - icon: github
+      text: Github
+      href: https://github.com/markcassar
+
+---
+
+Welcome! This is where I will post Jupyter notebooks that I am using to understand various topics of interest. My hope is that they will help you too.
+s
