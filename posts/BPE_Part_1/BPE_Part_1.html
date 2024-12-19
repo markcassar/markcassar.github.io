@@ -304,7 +304,12 @@ Num chars: 18, Code pts in hex: ['0x48', '0x6f', '0x77', '0x20', '0x61', '0x72',
 &amp;= 128512
 \end{align*}
 \]</span></p>
-<p>I can also check the correspondence between these code point values and the characters that printed using the following tables: - for 1009 see <a href="https://en.wikipedia.org/wiki/List_of_Unicode_characters#Greek_and_Coptic">Greek and Coptic</a> - for 2332 (use hex value U+91C) see <a href="https://en.wikipedia.org/wiki/List_of_Unicode_characters#Devanagari">Devanagari</a> - for 128512 (use hex value U+1F600) see <a href="https://en.wikipedia.org/wiki/Emoji#Unicode_blocks">Emoji</a></p>
+<p>I can also check the correspondence between these code point values and the characters that printed using the following tables:</p>
+<ul>
+<li>for 1009 see <a href="https://en.wikipedia.org/wiki/List_of_Unicode_characters#Greek_and_Coptic">Greek and Coptic</a></li>
+<li>for 2332 (use hex value U+91C) see <a href="https://en.wikipedia.org/wiki/List_of_Unicode_characters#Devanagari">Devanagari</a></li>
+<li>for 128512 (use hex value U+1F600) see <a href="https://en.wikipedia.org/wiki/Emoji#Unicode_blocks">Emoji</a></li>
+</ul>
 <p>Now when I look at the same text encoded in UTF-8, I see:</p>
 <div id="cell-17" class="cell" data-execution_count="49">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>s_utf8 <span class="op">=</span> s.encode(<span class="st">"utf-8"</span>)</span>
@@ -469,6 +474,7 @@ Cell <span class="ansi-green-fg ansi-bold">In[61], line 1</span>
 </div>
 <p>This is because the inserted space character is not a valid continuation byte according the the UTF-8 scheme.</p>
 <p>Well, that is it for the first part of my journey to dig into the details of BPE. Some aspects of encoding are still a bit murky, but I think I grasp enough at the moment to move on.</p>
+<p><a href="https://drive.google.com/file/d/122yQAVAhNQK0Dow7dtrl8fYwlZAeeJDK/view?usp=sharing">Download this notebook</a></p>
 
 
 </section>
