@@ -197,7 +197,7 @@ window.Quarto = {
       <div>
       <div class="quarto-title-meta-heading">Modified</div>
       <div class="quarto-title-meta-contents">
-        <p class="date-modified">December 19, 2024</p>
+        <p class="date-modified">December 20, 2024</p>
       </div>
     </div>
       
@@ -284,7 +284,12 @@ window.Quarto = {
 Num chars: 18, Code pts in hex: ['0x48', '0x6f', '0x77', '0x20', '0x61', '0x72', '0x65', '0x20', '0x79', '0x6f', '0x75', '0x3f', '0x20', '0x3f1', '0x20', '0x91c', '0x20', '0x1f600']</code></pre>
 </div>
 </div>
-<p>For the moment, I want to look at the code points that are above 127, which are 1009, 2332, and 128512. Looking up these code points will often require the hexadecimal equivalent: - 1009 = 0x3f1 = U+3F1 - 2332 = 0x91c = U+91C - 128512 = 0x1f600 = U+1F600</p>
+<p>For the moment, I want to look at the code points that are above 127, which are 1009, 2332, and 128512. Looking up these code points will often require the hexadecimal equivalent:</p>
+<ul>
+<li>1009 = 0x3f1 = U+3F1</li>
+<li>2332 = 0x91c = U+91C</li>
+<li>128512 = 0x1f600 = U+1F600</li>
+</ul>
 <p>To clarify this, I will note the equivalence mathematically. First, I note again that the prefix ‘0x’ is Python’s way of denoting a hexadecimal number. Thus, the values after that define the actual number. Second, I need to remember that in hexadecimal, we need to use the first few characters of the alphabet to represent the numbers from 10 to 15, so A=10, B=11, C=12, D=13, E=14, and F=15. So, we have:</p>
 <p><span class="math display">\[
 \begin{align*}
