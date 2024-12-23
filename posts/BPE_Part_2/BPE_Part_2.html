@@ -180,6 +180,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
+<script>
+code_show=false;
+<img src="tokens.png">
+</script>
 <section id="understanding-byte-pair-encoding-part-2-tokenization" class="level2">
 <h2 class="anchored" data-anchor-id="understanding-byte-pair-encoding-part-2-tokenization">Understanding Byte Pair Encoding: Part 2: Tokenization</h2>
 <p>In my last post, I discussed encoding text, specifically using UTF-8. As I noted there, this encoding uses 1 to 4 bytes to represent all the characters in the Unicode system. This will be the <em>byte</em> part of <em>byte pair encoding (BPE)</em>, which was introduced by Sennrich, Haddow, and Birch in a paper entitled <a href="https://arxiv.org/abs/1508.07909">Neural Machine Translation of Rare Words with Subword Units</a> in 2015 (although the official publication was in 2016). It was proposed as a solution to the open vocabulary problem in machine translation. The method is an adaptation of a data compression technique developed by <a href="https://www.semanticscholar.org/paper/A-new-algorithm-for-data-compression-Gage/1aa9c0045f1fe8c79cce03c7c14ef4b4643a21f8">Philip Gage</a> back in 1994.</p>
@@ -202,7 +206,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>break up any new text into tokens from this vocabulary</li>
 </ul>
 <p>It is a good time to try this out, so, I’ll grab some text that is in the public domain:</p>
-<div id="cell-5" class="cell" data-execution_count="119">
+<div id="cell-6" class="cell" data-execution_count="119">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://www.gutenberg.org/cache/epub/2814/pg2814.txt"</span></span>
@@ -218,7 +222,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>I am going to ignore punctuation and define a token as a word:</p>
-<div id="cell-7" class="cell" data-execution_count="120">
+<div id="cell-8" class="cell" data-execution_count="120">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> string </span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>punct <span class="op">=</span> string.punctuation</span>
@@ -233,7 +237,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Based on defining a token at the word level, I have 183 tokens in my training data, which I took to be the first paragraph of the text. Now I would like to create the vocabulary, which is just the set of unique tokens:</p>
-<div id="cell-9" class="cell" data-execution_count="121">
+<div id="cell-10" class="cell" data-execution_count="121">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>vocab <span class="op">=</span> <span class="bu">sorted</span>(<span class="bu">list</span>(<span class="bu">set</span>(par_tokens)))</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(vocab))</span>
@@ -244,7 +248,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Using this vocabulary, I can now try to tokenize any new text:</p>
-<div id="cell-11" class="cell" data-execution_count="131">
+<div id="cell-12" class="cell" data-execution_count="131">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> check_tokens(tokens, vocab):</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> token <span class="kw">in</span> tokens:</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> token <span class="kw">in</span> vocab: </span>
@@ -272,7 +276,7 @@ Check if all tokens are in the vocabulary:
 <section id="out-of-vocabulary-words" class="level3">
 <h3 class="anchored" data-anchor-id="out-of-vocabulary-words">Out-of-vocabulary words</h3>
 <p>But what if I wanted to tokenize a different sentence?</p>
-<div id="cell-14" class="cell" data-execution_count="132">
+<div id="cell-15" class="cell" data-execution_count="132">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>diff_text <span class="op">=</span> <span class="st">"I hate to be on vacation"</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>diff_text_tokens <span class="op">=</span> diff_text.split()</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -295,7 +299,7 @@ Check if all tokens are in the vocabulary:
 <section id="rare-words" class="level3">
 <h3 class="anchored" data-anchor-id="rare-words">Rare words</h3>
 <p>Another issue arises if I try to make sure the vocabulary size doesn’t get too big. To do this, I can limit the vocabulary to tokens that occur at or above some threshold frequency. To see how this works, I’ll redo what I just did above, but this time I will only keep tokens in my vocabulary that occur more than once.</p>
-<div id="cell-17" class="cell" data-execution_count="133">
+<div id="cell-18" class="cell" data-execution_count="133">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>t_freq <span class="op">=</span> {}</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> token <span class="kw">in</span> par_tokens:</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    t_freq[token] <span class="op">=</span> t_freq.get(token, <span class="dv">0</span>) <span class="op">+</span> <span class="dv">1</span></span>
@@ -310,7 +314,7 @@ Check if all tokens are in the vocabulary:
 </div>
 </div>
 <p>Applying this new vocabulary to the same two sentences gives:</p>
-<div id="cell-19" class="cell" data-execution_count="134">
+<div id="cell-20" class="cell" data-execution_count="134">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"New text: </span><span class="sc">{</span>new_text<span class="sc">}</span><span class="ss">"</span>)</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Possible tokenization: </span><span class="sc">{</span>new_text_tokens<span class="sc">}</span><span class="ss">"</span>)</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>()</span>
@@ -340,7 +344,7 @@ Check if all tokens are in the vocabulary:
 <p>I get the anticipated drop in vocabulary size from 109 to 27, however, I also see that now neither of the sentences can be properly tokenized. This is the <em>rare word</em> problem.</p>
 <p>One way to deal with this is to always add a special token <code>&lt;|unk|&gt;</code> that can be used whenever I encounter a token that is not in the vocabulary.</p>
 <p>For our current scenario, our sentences would be tokenized as follows:</p>
-<div id="cell-21" class="cell" data-execution_count="135">
+<div id="cell-22" class="cell" data-execution_count="135">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>new_text_tokens <span class="op">=</span> [token <span class="cf">if</span> token <span class="kw">in</span> vocab_freq <span class="cf">else</span> <span class="st">'&lt;|unk|&gt;'</span> <span class="cf">for</span> token <span class="kw">in</span> new_text.split()]</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>diff_text_tokens <span class="op">=</span> [token <span class="cf">if</span> token <span class="kw">in</span> vocab_freq <span class="cf">else</span> <span class="st">'&lt;|unk|&gt;'</span> <span class="cf">for</span> token <span class="kw">in</span> diff_text.split()]</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -357,7 +361,7 @@ Check if all tokens are in the vocabulary:
 <h3 class="anchored" data-anchor-id="go-bigger">Go bigger</h3>
 <p>For current LLMs computation happens at the token level. As far as I can tell, this means that if a given piece of raw text can be represented by fewer tokens, then it requires less computation; or, if I fix the computational resources, then I can process more raw text at a time (the so-called context window).</p>
 <p>If that is the case, maybe going bigger than word level would be a good idea. I’ll try sentences:</p>
-<div id="cell-24" class="cell" data-execution_count="136">
+<div id="cell-25" class="cell" data-execution_count="136">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>sent <span class="op">=</span> re.split(<span class="vs">r'(?&lt;!\w\.\w.)(?&lt;![A-Z][a-z]\.)(?&lt;=\.|\?|!)\s'</span>, par)</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>sent</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -380,7 +384,7 @@ Check if all tokens are in the vocabulary:
 </div>
 </div>
 <p>Now, if I try to tokenize new text I’ll see that it will be very unlikely that tokenization will occur properly:</p>
-<div id="cell-26" class="cell" data-execution_count="137">
+<div id="cell-27" class="cell" data-execution_count="137">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"New text: </span><span class="sc">{</span>new_text<span class="sc">}</span><span class="ss">"</span>)</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>new_text_tokens <span class="op">=</span> [<span class="st">''</span>.join(ch <span class="cf">for</span> ch <span class="kw">in</span> new_text <span class="cf">if</span> ch.isalnum() <span class="kw">or</span> ch.isspace())]</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Possible tokenization: </span><span class="sc">{</span>new_text_tokens<span class="sc">}</span><span class="ss">"</span>)</span>
@@ -414,7 +418,7 @@ Check if all tokens are in the vocabulary:
 <section id="go-smaller" class="level3">
 <h3 class="anchored" data-anchor-id="go-smaller">Go smaller</h3>
 <p>What if, instead of making the tokens longer than words, I made them shorter? An obvious approach then would be to tokenize at the character level:</p>
-<div id="cell-29" class="cell" data-execution_count="138">
+<div id="cell-30" class="cell" data-execution_count="138">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>vocab_ch <span class="op">=</span> <span class="bu">sorted</span>(<span class="bu">list</span>(<span class="bu">set</span>(<span class="bu">list</span>(par))))</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>vocab_ch <span class="op">=</span> [ch <span class="cf">for</span> ch <span class="kw">in</span> vocab_ch <span class="cf">if</span> ch.isalnum() <span class="kw">or</span> ch.isspace()]</span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(vocab_ch)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -423,7 +427,7 @@ Check if all tokens are in the vocabulary:
 </div>
 </div>
 <p>Let’s see how this would work on my two sentences:</p>
-<div id="cell-31" class="cell" data-execution_count="139">
+<div id="cell-32" class="cell" data-execution_count="139">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"New text: </span><span class="sc">{</span>new_text<span class="sc">}</span><span class="ss">"</span>)</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>new_text_tokens <span class="op">=</span> <span class="bu">list</span>(<span class="st">''</span>.join(ch <span class="cf">for</span> ch <span class="kw">in</span> new_text <span class="cf">if</span> ch.isalnum() <span class="kw">or</span> ch.isspace()))</span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Possible tokenization: </span><span class="sc">{</span>new_text_tokens<span class="sc">}</span><span class="ss">"</span>)</span>
