@@ -1,19 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://markcassar.github.io/posts/BPE_Part_2/BPE_Part_2.html</loc>
-    <lastmod>2024-12-23T16:50:37.974Z</lastmod>
+    <loc>https://markcassar.github.io/posts/BPE_Part_3/BPE_Part_3.html</loc>
+    <lastmod>2025-01-08T00:17:52.217Z</lastmod>
   </url>
   <url>
-    <loc>https://markcassar.github.io/index.html</loc>
-    <lastmod>2024-12-18T23:07:43.045Z</lastmod>
+    <loc>https://markcassar.github.io/posts/BPE_Part_1/BPE_Part_1.html</loc>
+    <lastmod>2024-12-20T20:08:39.428Z</lastmod>
   </url>
   <url>
     <loc>https://markcassar.github.io/about.html</loc>
     <lastmod>2024-12-18T23:12:15.644Z</lastmod>
   </url>
   <url>
-    <loc>https://markcassar.github.io/posts/BPE_Part_1/BPE_Part_1.html</loc>
-    <lastmod>2024-12-20T20:08:39.428Z</lastmod>
+    <loc>https://markcassar.github.io/index.html</loc>
+    <lastmod>2024-12-18T23:07:43.045Z</lastmod>
+  </url>
+  <url>
+    <loc>https://markcassar.github.io/posts/BPE_Part_2/BPE_Part_2.html</loc>
+    <lastmod>2024-12-23T16:50:37.974Z</lastmod>
   </url>
 </urlset>
