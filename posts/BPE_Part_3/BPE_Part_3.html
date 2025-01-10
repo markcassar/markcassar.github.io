@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Mark Cassar">
-<meta name="dcterms.date" content="2024-01-07">
+<meta name="dcterms.date" content="2025-01-07">
 
 <title>Understanding Byte Pair Encoding: Part 3: the Algorithm – Filling in the Gaps</title>
 <style>
@@ -161,10 +161,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">January 7, 2024</p>
+        <p class="date">January 7, 2025</p>
       </div>
     </div>
     
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">January 10, 2025</p>
+      </div>
+    </div>
       
     </div>
     
@@ -182,7 +188,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="understanding-byte-pair-encoding-part-3-the-algorithm" class="level2">
 <h2 class="anchored" data-anchor-id="understanding-byte-pair-encoding-part-3-the-algorithm">Understanding Byte Pair Encoding: Part 3: the Algorithm</h2>
-<p>I wrote about encodings and the basics of tokenization in my two earlier posts, so in this post, I will dig into the actual algorithm of byte-pair encoding (BPE). In the paper <a href="https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf">Language Models are Unsupervised Multitask Learners</a>, which introduces GPT2, the authors note they use BPE at the byte level and that some preprocessing improves results by explicitly avoiding merges across character categories. It would seem, then, that interpreting text as a sequence of bytes, and not as a sequence of Unicode code points, is at the heart of the BPE method.</p>
+<p>I wrote about encodings and the basics of tokenization in my <a href="https://markcassar.github.io/">two earlier posts</a>, so in this post, I will dig into the actual algorithm of byte-pair encoding (BPE). In the paper <a href="https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf">Language Models are Unsupervised Multitask Learners</a>, which introduces GPT2, the authors note they use BPE at the byte level and that some preprocessing improves results by explicitly avoiding merges across character categories. It would seem, then, that interpreting text as a sequence of bytes, and not as a sequence of Unicode code points, is at the heart of the BPE method.</p>
 <p>I’ll get into some of these preprocessing details in another post, but, for now, I just want to get an idea of how this works.</p>
 <p>The <a href="http://www.pennelynn.com/Documents/CUJ/HTML/94HTML/19940045.HTM">paper</a> that introduced BPE states that <em>“The algorithm compresses data by finding the most frequently occurring pairs of adjacent bytes in the data and replacing all instances of the pair with a byte that was not in the original data. The algorithm repeats this process until no further compression is possible, …”</em></p>
 <figure class="figure">
@@ -496,6 +502,7 @@ Pairs merged: {(240, 159): 256, (256, 152): 257, (257, 132): 258, (97, 98): 259}
 <p>I will stop here, even though there are a couple more merges I could do, as I think the process is pretty clear now. All of this could, of course, be cleaned up code-wise but I wanted to go step by step with a semi-manual process so that the algorithm would sink in.</p>
 <p>What comes out of this BPE process is a set of tokens, which would be the vocabulary, and an ordered list of merges. With a sufficient amount of starting text, the vocabulary and merges would be sufficient to tokenize any text for input into a language model.</p>
 <p>That’s it for now. In the next post I will go into some of the more nuanced modifications of BPE as done for GPT2.</p>
+<p><a href="https://drive.google.com/file/d/1WjU5spGmZbKWDPrExyVb2w5Uxgip2KN6/view?usp=sharing">Download this notebook</a></p>
 
 
 </section>

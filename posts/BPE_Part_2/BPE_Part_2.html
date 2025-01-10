@@ -165,6 +165,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       </div>
     </div>
     
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">January 10, 2025</p>
+      </div>
+    </div>
       
     </div>
     
@@ -182,7 +188,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="understanding-byte-pair-encoding-part-2-tokenization" class="level2">
 <h2 class="anchored" data-anchor-id="understanding-byte-pair-encoding-part-2-tokenization">Understanding Byte Pair Encoding: Part 2: Tokenization</h2>
-<p>In my last post, I discussed encoding text, specifically using UTF-8. As I noted there, this encoding uses 1 to 4 bytes to represent all the characters in the Unicode system. This will be the <em>byte</em> part of <em>byte pair encoding (BPE)</em>, which was introduced by Sennrich, Haddow, and Birch in a paper entitled <a href="https://arxiv.org/abs/1508.07909">Neural Machine Translation of Rare Words with Subword Units</a> in 2015 (although the official publication was in 2016). It was proposed as a solution to the open vocabulary problem in machine translation. The method is an adaptation of a data compression technique developed by <a href="https://www.semanticscholar.org/paper/A-new-algorithm-for-data-compression-Gage/1aa9c0045f1fe8c79cce03c7c14ef4b4643a21f8">Philip Gage</a> back in 1994.</p>
+<p>In my <a href="https://markcassar.github.io/posts/BPE_Part_1/BPE_Part_1.html">last post</a>, I discussed encoding text, specifically using UTF-8. As I noted there, this encoding uses 1 to 4 bytes to represent all the characters in the Unicode system. This will be the <em>byte</em> part of <em>byte pair encoding (BPE)</em>, which was introduced by Sennrich, Haddow, and Birch in a paper entitled <a href="https://arxiv.org/abs/1508.07909">Neural Machine Translation of Rare Words with Subword Units</a> in 2015 (although the official publication was in 2016). It was proposed as a solution to the open vocabulary problem in machine translation. The method is an adaptation of a data compression technique developed by <a href="https://www.semanticscholar.org/paper/A-new-algorithm-for-data-compression-Gage/1aa9c0045f1fe8c79cce03c7c14ef4b4643a21f8">Philip Gage</a> back in 1994.</p>
 <p>Rare and out-of-vocabulary (OOV) words are a known issue when dealing with language, so the proposal was to tokenize text in a way that allows for subword units. In this way, rare or OOV words could be composed of the subunits. Sennrich et al.&nbsp;showed that this approach gave better results than prior methods.</p>
 <p>Now, instead of <em>encodings</em> and <em>bytes</em> I want to come to grips with the terms <em>vocabulary</em>, <em>out-of-vocabulary</em>, and <em>tokenize</em>: what do they mean and why do I need them?</p>
 <p>I understand that large language models (LLMs) perform mathematical operations on their input to produce their output. So, it makes sense that they cannot process raw text. But, why not just use the numbers that come out of the UTF-8 encoding? The two main reasons against that approach that I can think of are:</p>
@@ -497,6 +503,7 @@ Check if all tokens are in the vocabulary:
 </table>
 <p>I conclude that the “no free lunch” axiom is correct. Removing some problems seems to potentially introduce problems somewhere else. For instance, tokenizing at the character level means there would be no such thing as OOV or rare word problems, but the cost is that for any give text there is a large increase in the number of tokens. So, if token count represents, on some level, computation then we need more computation for the same text then, say, word level tokenization. If I keep the computation level fixed, then character level tokenization will significantly reduce the context window, that is, how much text can be processed at the same time by the LLM.</p>
 <p>I think of byte pair encoding as a smart compromise between character and word level tokenization. And that is what I’ll finally dig into next time.</p>
+<p><a href="https://drive.google.com/file/d/1nZuxsiIBR5ON4sCQhYtVPvHktyYD0chS/view?usp=sharing">Download this notebook</a></p>
 
 
 </section>
