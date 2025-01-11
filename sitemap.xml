@@ -1,23 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://markcassar.github.io/posts/BPE_Part_3/BPE_Part_3.html</loc>
-    <lastmod>2025-01-10T20:56:25.752Z</lastmod>
+    <loc>https://markcassar.github.io/posts/BPE_Part_4/BPE_Part_4.html</loc>
+    <lastmod>2025-01-11T20:58:06.432Z</lastmod>
   </url>
   <url>
-    <loc>https://markcassar.github.io/posts/BPE_Part_1/BPE_Part_1.html</loc>
-    <lastmod>2024-12-20T20:08:39.428Z</lastmod>
-  </url>
-  <url>
-    <loc>https://markcassar.github.io/about.html</loc>
-    <lastmod>2024-12-18T23:12:15.644Z</lastmod>
+    <loc>https://markcassar.github.io/posts/BPE_Part_2/BPE_Part_2.html</loc>
+    <lastmod>2025-01-10T20:55:29.522Z</lastmod>
   </url>
   <url>
     <loc>https://markcassar.github.io/index.html</loc>
     <lastmod>2024-12-18T23:07:43.045Z</lastmod>
   </url>
   <url>
-    <loc>https://markcassar.github.io/posts/BPE_Part_2/BPE_Part_2.html</loc>
-    <lastmod>2025-01-10T20:55:29.522Z</lastmod>
+    <loc>https://markcassar.github.io/about.html</loc>
+    <lastmod>2024-12-18T23:12:15.644Z</lastmod>
+  </url>
+  <url>
+    <loc>https://markcassar.github.io/posts/BPE_Part_1/BPE_Part_1.html</loc>
+    <lastmod>2024-12-20T20:08:39.428Z</lastmod>
+  </url>
+  <url>
+    <loc>https://markcassar.github.io/posts/BPE_Part_3/BPE_Part_3.html</loc>
+    <lastmod>2025-01-10T20:56:25.752Z</lastmod>
   </url>
 </urlset>
