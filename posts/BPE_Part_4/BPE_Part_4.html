@@ -165,6 +165,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       </div>
     </div>
     
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">January 12, 2025</p>
+      </div>
+    </div>
       
     </div>
     
@@ -313,7 +319,20 @@ Merging pair: ('one ', 'd')
 </div>
 </div>
 <p>Now the process would be to apply the BPE algorithm to each element of the list independently of all the others. In this way, merges could only occure across the defined categories.</p>
-<p>Before finishing this topic, I want to summarize how this process works: - a completely different training data set than the one used to train the large language model (LLM) is used to train the BPE tokenizer - an initial vocabulary of 256 tokens (byte values from 0 to 255) starts the process - merges are done at the byte level and always for the most frequently occurring pair of adnacent bytes - merges do not occur across character category boundaries - merging stops when the vocabulary reaches a predetermined number of tokens (this is a hyperparameter) - after training there is: - a vocabulary: basically a dictionary of tokens and their unique IDs - a list of merge pairs: character pairs learned from training and ranked from most frequent to least frequent - the algorithm, vocabulary, and merge list are required at inference to tokenize text for input into an LLM for prediction</p>
+<p>Before finishing this topic, I want to summarize how this process works:</p>
+<ul>
+<li>a completely different training data set than the one used to train the large language model (LLM) is used to train the BPE tokenizer</li>
+<li>an initial vocabulary of 256 tokens (byte values from 0 to 255) starts the process</li>
+<li>merges are done at the byte level and always for the most frequently occurring pair of adnacent bytes</li>
+<li>merges do not occur across character category boundaries</li>
+<li>merging stops when the vocabulary reaches a predetermined number of tokens (this is a hyperparameter)</li>
+<li>after training there is:
+<ul>
+<li>a vocabulary: basically a dictionary of tokens and their unique IDs</li>
+<li>a list of merge pairs: character pairs learned from training and ranked from most frequent to least frequent</li>
+</ul></li>
+<li>the algorithm, vocabulary, and merge list are required at inference to tokenize text for input into an LLM for prediction</li>
+</ul>
 <p>While the training code for the GPT2 tokenizer is not available, the <a href="https://github.com/openai/gpt-2/blob/master/src/encoder.py">code for tokenizing new text</a> for input into the model is.</p>
 <p>And that is all for this topic!</p>
 
