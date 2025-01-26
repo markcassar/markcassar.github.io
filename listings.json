@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/dropout/dropout.html",
       "/posts/BPE_Part_4/BPE_Part_4.html",
       "/posts/BPE_Part_3/BPE_Part_3.html",
       "/posts/BPE_Part_2/BPE_Part_2.html",
