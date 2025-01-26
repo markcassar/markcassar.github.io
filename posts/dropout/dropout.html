@@ -103,35 +103,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 <link rel="stylesheet" href="../../styles.css">
 </head>
@@ -225,12 +196,12 @@ window.Quarto = {
 <img src="Dropout-1.jpg" width="600">
 </center>
 <p>For each sample, before it goes through a forward pass calculation, a subnetwork is created by determining whether or not each unit in the original network will be active. Whether to “keep” or “drop” a unit is determined by a Bernoulli random variable.</p>
-<p>To see how this can be done I first took a look at NumPy’s binomial function: <code>random.binomial(n, p, size=None)</code>. When <span class="math inline">\(n=1\)</span> this is the same as a Bernoulli distribution. Now the confusing part: the <code>p</code> in this function refers to the probality of success (which is returned as a 1). T, to stay in line with the terms used in packages like <a href="https://pytorch.org/docs/stable/generated/torch.nn.Dropout.html">PyTorch</a> and <a href="https://keras.io/api/layers/regularization_layers/dropout/">Keras</a>, I want to represent the probability of keeping a unit (success) in terms of the probability of dropping a unit (failure):</p>
-<p><span class="math display">\[
+<p>To see how this can be done I first took a look at NumPy’s binomial function: <code>random.binomial(n, p, size=None)</code>. When <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n=1</annotation></semantics></math> this is the same as a Bernoulli distribution. Now the confusing part: the <code>p</code> in this function refers to the probality of success (which is returned as a 1). T, to stay in line with the terms used in packages like <a href="https://pytorch.org/docs/stable/generated/torch.nn.Dropout.html">PyTorch</a> and <a href="https://keras.io/api/layers/regularization_layers/dropout/">Keras</a>, I want to represent the probability of keeping a unit (success) in terms of the probability of dropping a unit (failure):</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mtext mathvariant="normal">keep</mtext></msub><mo>=</mo><mn>1</mn><mo>−</mo><msub><mi>p</mi><mtext mathvariant="normal">drop</mtext></msub></mrow><annotation encoding="application/x-tex">
 p_{\text{keep}} = 1 - p_{\text{drop}}
-\]</span></p>
-<p>While a typical value for <span class="math inline">\(p_{\text{drop}}\)</span> is 0.5, which makes <span class="math inline">\(p_{\text{keep}} = p_{\text{drop}}\)</span>, I need to keep the distinction in mind.</p>
-<p>Using <span class="math inline">\(n=1\)</span>, <span class="math inline">\(p_{\text{drop}} = 0.5\)</span>, I get:</p>
+</annotation></semantics></math></p>
+<p>While a typical value for <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>p</mi><mtext mathvariant="normal">drop</mtext></msub><annotation encoding="application/x-tex">p_{\text{drop}}</annotation></semantics></math> is 0.5, which makes <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mtext mathvariant="normal">keep</mtext></msub><mo>=</mo><msub><mi>p</mi><mtext mathvariant="normal">drop</mtext></msub></mrow><annotation encoding="application/x-tex">p_{\text{keep}} = p_{\text{drop}}</annotation></semantics></math>, I need to keep the distinction in mind.</p>
+<p>Using <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n=1</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mtext mathvariant="normal">drop</mtext></msub><mo>=</mo><mn>0.5</mn></mrow><annotation encoding="application/x-tex">p_{\text{drop}} = 0.5</annotation></semantics></math>, I get:</p>
 <div id="cell-2" class="cell" data-execution_count="258">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -243,12 +214,12 @@ p_{\text{keep}} = 1 - p_{\text{drop}}
 <center>
 <img src="Dropout-2.jpg" width="600">
 </center>
-<p>To make it even clearer for myself, since a Bernoulli random variable takes on one of two outcomes, I think of this as follows: - start with the original network - create a subnetwork for current training sample: - for each unit flip a fair coin (since <span class="math inline">\(p=0.5\)</span>): - heads = keep - tails = drop - do the forward pass using this subnetwork - repeat for all training samples</p>
+<p>To make it even clearer for myself, since a Bernoulli random variable takes on one of two outcomes, I think of this as follows: - start with the original network - create a subnetwork for current training sample: - for each unit flip a fair coin (since <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mn>0.5</mn></mrow><annotation encoding="application/x-tex">p=0.5</annotation></semantics></math>): - heads = keep - tails = drop - do the forward pass using this subnetwork - repeat for all training samples</p>
 <p>Visually:</p>
 <center>
 <img src="Dropout-3.jpg" width="700">
 </center>
-<p>The next thing I wanted to look at was the distribution of dropped units across all the subnetworks. When doing this I noticed that my small example network is misleading in that it has a fairly high probability for all units to be dropped in a subnetwork, which would mean no subnetwork. This is not the case for networks that would be used in practice. The plots below show the results of two original networks with 4 units and 100 units, respectively, with the dropout recipe applied 1000 times for <span class="math inline">\(p_{\text{drop}} = 0.5\)</span>.</p>
+<p>The next thing I wanted to look at was the distribution of dropped units across all the subnetworks. When doing this I noticed that my small example network is misleading in that it has a fairly high probability for all units to be dropped in a subnetwork, which would mean no subnetwork. This is not the case for networks that would be used in practice. The plots below show the results of two original networks with 4 units and 100 units, respectively, with the dropout recipe applied 1000 times for <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mtext mathvariant="normal">drop</mtext></msub><mo>=</mo><mn>0.5</mn></mrow><annotation encoding="application/x-tex">p_{\text{drop}} = 0.5</annotation></semantics></math>.</p>
 <div id="cell-6" class="cell" data-execution_count="306">
 <details class="code-fold">
 <summary>Code</summary>
@@ -307,7 +278,7 @@ p_{\text{keep}} = 1 - p_{\text{drop}}
 </div>
 </div>
 </div>
-<p>It is easier to see from the histograms that for more realistic numbers of units, the probability of all units being dropped is <span class="math inline">\(p_{\text{drop}}^{100} = 7.889\times 10^{-31}\)</span>, which is essentially 0.</p>
+<p>It is easier to see from the histograms that for more realistic numbers of units, the probability of all units being dropped is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>p</mi><mtext mathvariant="normal">drop</mtext><mn>100</mn></msubsup><mo>=</mo><mn>7.889</mn><mo>×</mo><msup><mn>10</mn><mrow><mi>−</mi><mn>31</mn></mrow></msup></mrow><annotation encoding="application/x-tex">p_{\text{drop}}^{100} = 7.889\times 10^{-31}</annotation></semantics></math>, which is essentially 0.</p>
 <p>The last thing I want to address in this section is how this process looks in code. Using PyTorch on my example network with 5 samples:</p>
 <div id="cell-8" class="cell" data-execution_count="353">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
@@ -366,50 +337,50 @@ tensor([[-0.0000, -0.5664,  0.3843, -0.0000],
 <section id="scaling" class="level3">
 <h3 class="anchored" data-anchor-id="scaling">Scaling</h3>
 <p>If I inspect the torch output above for my network with and without dropout, I notice that the activations with dropout are two times the values without dropout. This is not by accident. In fact, the relationship between the two is given by:</p>
-<span class="math display">\[
+<span class="math display">$$
 a_{\rm{drop}} = \frac{1}{1 - p_{\rm{drop}}}\times a_{\rm{no\,drop}}
-\]</span> This scaling is done at the same time as the dropout mask is applied to the activations of the network layer. In the image below the * operation is element-wise multiplication.
+$$</span> This scaling is done at the same time as the dropout mask is applied to the activations of the network layer. In the image below the * operation is element-wise multiplication.
 <center>
 <img src="Dropout-6.jpg" width="600">
 </center>
-<p>To do a true averaging process at test time, one would need to make predictions for each test sample across all subnetworks and then average them. With <span class="math inline">\(2^n\)</span> possible subnetworks, this is not possible. Instead, the authors of the original paper showed that a more practical scaling approach gives a good approximation to the true average (see their Fig. 11). In the paper they showed how scaling the weights of a dropout layer was practically equivalent to doing the proper averaging; that is, at test time, replace all weights, <span class="math inline">\(w\)</span>, of the layer with dropout with scaled weights, <span class="math inline">\(p_{\rm{keep}}w\)</span>.</p>
+<p>To do a true averaging process at test time, one would need to make predictions for each test sample across all subnetworks and then average them. With <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mn>2</mn><mi>n</mi></msup><annotation encoding="application/x-tex">2^n</annotation></semantics></math> possible subnetworks, this is not possible. Instead, the authors of the original paper showed that a more practical scaling approach gives a good approximation to the true average (see their Fig. 11). In the paper they showed how scaling the weights of a dropout layer was practically equivalent to doing the proper averaging; that is, at test time, replace all weights, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>w</mi><annotation encoding="application/x-tex">w</annotation></semantics></math>, of the layer with dropout with scaled weights, <span class="math inline">$p_{\rm{keep}}w$</span>.</p>
 <p>In practice, and how it is implemented in deep learning frameworks like PyTorch and Keras is what is sometimes called <em>inverted dropout</em>, where the activations are scaled, as noted above. The advantage of inverted dropout is that the network layers remain unchanged during both training and testing. The only thing that changes is whether or not dropout is applied; and this can be controlled by a boolean argument <code>training</code> whenever the layer is called.</p>
 <p>To understand this scaling concept, I looked at the <a href="https://en.wikipedia.org/wiki/Expected_value">expected value</a> for the activation of a unit in a layer. As a recap, the expected value of a discrete random variable is:</p>
-<p><span class="math display">\[
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>X</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>0</mn></mrow><mn>1</mn></munderover><msub><mi>x</mi><mi>i</mi></msub><mi>p</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>X</mi><mo>=</mo><msub><mi>x</mi><mi>i</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">
 E[X] = \sum_{i=0}^{1} x_i p(X=x_i),
-\]</span> where <span class="math inline">\(x_i\)</span> is one of the possible values that <span class="math inline">\(X\)</span> can have and <span class="math inline">\(p_i\)</span> is the associated probability of getting that value. To make it clearer, the expected value for a six-sided die roll is:</p>
-<p><span class="math display">\[
+</annotation></semantics></math> where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>x</mi><mi>i</mi></msub><annotation encoding="application/x-tex">x_i</annotation></semantics></math> is one of the possible values that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math> can have and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>p</mi><mi>i</mi></msub><annotation encoding="application/x-tex">p_i</annotation></semantics></math> is the associated probability of getting that value. To make it clearer, the expected value for a six-sided die roll is:</p>
+<p><span class="math display">$$
 \begin{align*}
 E[\rm{roll}] &amp;= 1\times\frac{1}{6} + 2\times\frac{1}{6} + 3\times\frac{1}{6} + 4\times\frac{1}{6} + 5\times\frac{1}{6} + 6\times\frac{1}{6} \\
 &amp;= \frac{1+2+3+4+5+6}{6} \\
 &amp;= 3.5\\
 \end{align*}
-\]</span> This is interpreted as the mean of the outcomes as the number of die rolls approaches infinity.</p>
-<p>Applying this principle to a network at test time, the expected activation value of a unit is: <span class="math display">\[
+$$</span> This is interpreted as the mean of the outcomes as the number of die rolls approaches infinity.</p>
+<p>Applying this principle to a network at test time, the expected activation value of a unit is: <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><mi>E</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>A</mi><mo stretchy="true" form="postfix">]</mo></mrow></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>0</mn></mrow><mn>1</mn></munderover><msub><mi>a</mi><mi>i</mi></msub><mi>p</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>A</mi><mo>=</mo><msub><mi>a</mi><mi>i</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mn>0</mn><mo>×</mo><msub><mi>p</mi><mtext mathvariant="normal">drop</mtext></msub><mo>+</mo><mi>a</mi><mo>×</mo><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><msub><mi>p</mi><mtext mathvariant="normal">drop</mtext></msub><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mi>a</mi><mo>×</mo><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><mn>0</mn><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mi>a</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">
 \begin{align*}
 E[A] &amp;= \sum_{i=0}^{1} a_i p(A=a_i) \\
 &amp;= 0\times p_{\text{drop}} + a\times(1 - p_{\text{drop}}) \\
 &amp;= a\times(1 - 0) \\
 &amp;= a
 \end{align*}
-\]</span> where <span class="math inline">\(a\)</span> is the activation. This is true because <span class="math inline">\(p_{\text{drop}} = 0\)</span> since no units are dropped during test time. During training, however, the expected value without scaling would be:</p>
-<p><span class="math display">\[
+</annotation></semantics></math> where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math> is the activation. This is true because <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mtext mathvariant="normal">drop</mtext></msub><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">p_{\text{drop}} = 0</annotation></semantics></math> since no units are dropped during test time. During training, however, the expected value without scaling would be:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><mi>E</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>A</mi><mo stretchy="true" form="postfix">]</mo></mrow></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>0</mn></mrow><mn>1</mn></munderover><msub><mi>a</mi><mi>i</mi></msub><mi>p</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>A</mi><mo>=</mo><msub><mi>a</mi><mi>i</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mn>0</mn><mo>×</mo><msub><mi>p</mi><mtext mathvariant="normal">drop</mtext></msub><mo>+</mo><mi>a</mi><mo>×</mo><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><msub><mi>p</mi><mtext mathvariant="normal">drop</mtext></msub><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mi>a</mi><mo>×</mo><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><msub><mi>p</mi><mtext mathvariant="normal">drop</mtext></msub><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mo>&lt;</mo><mi>a</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">
 \begin{align*}
 E[A] &amp;= \sum_{i=0}^{1} a_i p(A=a_i) \\
 &amp;= 0\times p_{\text{drop}} + a\times(1 - p_{\text{drop}}) \\
 &amp;= a\times(1 - p_{\text{drop}}) \\
 &amp;&lt; a
 \end{align*}
-\]</span></p>
+</annotation></semantics></math></p>
 <p>If, however, a scaling of $ a’ = a / (1 - p_{})$ is carried out then the expected value would be:</p>
-<p><span class="math display">\[
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><mi>E</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>A</mi><mo stretchy="true" form="postfix">]</mo></mrow></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>0</mn></mrow><mn>1</mn></munderover><msub><mi>a</mi><mi>i</mi></msub><mi>p</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>A</mi><mo>=</mo><msub><mi>a</mi><mi>i</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mn>0</mn><mo>×</mo><msub><mi>p</mi><mtext mathvariant="normal">drop</mtext></msub><mo>+</mo><mi>a</mi><mi>′</mi><mo>×</mo><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><msub><mi>p</mi><mtext mathvariant="normal">drop</mtext></msub><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mn>0</mn><mo>×</mo><msub><mi>p</mi><mtext mathvariant="normal">drop</mtext></msub><mo>+</mo><mfrac><mi>a</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><msub><mi>p</mi><mtext mathvariant="normal">drop</mtext></msub><mo stretchy="true" form="postfix">)</mo></mrow></mfrac><mo>×</mo><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><msub><mi>p</mi><mtext mathvariant="normal">drop</mtext></msub><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mi>a</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">
 \begin{align*}
 E[A] &amp;= \sum_{i=0}^{1} a_i p(A=a_i) \\
 &amp;= 0\times p_{\text{drop}} + a'\times(1 - p_{\text{drop}}) \\
 &amp;= 0\times p_{\text{drop}} + \frac{a}{(1 - p_{\text{drop}})}\times(1 - p_{\text{drop}}) \\
 &amp; = a
 \end{align*}
-\]</span></p>
+</annotation></semantics></math></p>
 <p>This part has not yet clicked with me on a fundamental level. For now, I also like to think of it in the following way, using an even smaller example network:</p>
 <center>
 <img src="Dropout-8.jpg" width="700">
@@ -423,8 +394,8 @@ E[A] &amp;= \sum_{i=0}^{1} a_i p(A=a_i) \\
 <img src="Dropout-4.jpg" width="700">
 </center>
 <p>Assuming mini-batch gradient descent, the units that are dropped have 0 gradient and the units that are kept have an associated gradient. For each unit, the gradients are accumulated until the end of the mini-batch, then averaged. The average is then used for the weight updates.</p>
-<p>So, in this example, considering only the weights connecting <span class="math inline">\(f_1\)</span> to each unit, and referring to them as <span class="math inline">\(w_1\)</span>, <span class="math inline">\(w_2\)</span>, <span class="math inline">\(w_3\)</span>, and <span class="math inline">\(w_4\)</span>, each weight would be updated as follows:</p>
-<p>$$ <span class="math display">\[\begin{align*}
+<p>So, in this example, considering only the weights connecting <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>f</mi><mn>1</mn></msub><annotation encoding="application/x-tex">f_1</annotation></semantics></math> to each unit, and referring to them as <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>w</mi><mn>1</mn></msub><annotation encoding="application/x-tex">w_1</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>w</mi><mn>2</mn></msub><annotation encoding="application/x-tex">w_2</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>w</mi><mn>3</mn></msub><annotation encoding="application/x-tex">w_3</annotation></semantics></math>, and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>w</mi><mn>4</mn></msub><annotation encoding="application/x-tex">w_4</annotation></semantics></math>, each weight would be updated as follows:</p>
+<p>$$ <span class="math display">$$\begin{align*}
 w_{1} &amp;\leftarrow w_{1} - \rm{learning \, rate} \times \frac{1}{3}\left[ \left(\frac{\partial L}{\partial w_{1}}\right)_{\rm{subnet \,1}} + \left(\frac{\partial L}{\partial w_{1}}\right)_{\rm{subnet \,2}} + \left(\frac{\partial L}{\partial w_{1}}\right)_{\rm{subnet \,3}} \right] \\
 &amp;= w_{1} - \rm{learning \, rate} \times \frac{1}{3}\left[ 0 + 0 + \left(\frac{\partial L}{\partial w_{1}}\right)_{\rm{subnet \,3}} \right] \\
 \\
@@ -438,7 +409,7 @@ w_{4} &amp;\leftarrow w_{4} - \rm{learning \, rate} \times \frac{1}{3}\left[ \le
 &amp;= w_{4} - \rm{learning \, rate} \times \frac{1}{3}\left[ \left(\frac{\partial L}{\partial w_{4}}\right)_{\rm{subnet \,1}} + 0 + \left(\frac{\partial L}{\partial w_{4}}\right)_{\rm{subnet \,3}} \right] \\
 \\
 
-\end{align*}\]</span> $$</p>
+\end{align*}$$</span> $$</p>
 <p>Of course, one could go deeper into dropout, or expand to cover its use in convolutional networks; But, at least for now, that is it for this post.</p>
 
 
