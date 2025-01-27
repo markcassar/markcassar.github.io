@@ -14,6 +14,7 @@ format:
     theme: flatly
     css: styles.css
     title-block-banner: images/new_havn_styled.jpeg
+    render-math-as: svg
 
 
 
