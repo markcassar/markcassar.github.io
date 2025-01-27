@@ -202,12 +202,12 @@ p_{\text{keep}} = 1 - p_{\text{drop}}
 </annotation></semantics></math></p>
 <p>While a typical value for <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>p</mi><mtext mathvariant="normal">drop</mtext></msub><annotation encoding="application/x-tex">p_{\text{drop}}</annotation></semantics></math> is 0.5, which makes <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mtext mathvariant="normal">keep</mtext></msub><mo>=</mo><msub><mi>p</mi><mtext mathvariant="normal">drop</mtext></msub></mrow><annotation encoding="application/x-tex">p_{\text{keep}} = p_{\text{drop}}</annotation></semantics></math>, I need to keep the distinction in mind.</p>
 <p>Using <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n=1</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mtext mathvariant="normal">drop</mtext></msub><mo>=</mo><mn>0.5</mn></mrow><annotation encoding="application/x-tex">p_{\text{drop}} = 0.5</annotation></semantics></math>, I get:</p>
-<div id="cell-2" class="cell" data-execution_count="258">
+<div id="cell-2" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>np.random.binomial(<span class="dv">1</span>, <span class="dv">1</span> <span class="op">-</span> <span class="fl">0.5</span>, size<span class="op">=</span>(<span class="dv">4</span>, ))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="258">
-<pre><code>array([1, 1, 0, 1], dtype=int32)</code></pre>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>array([1, 0, 1, 1], dtype=int32)</code></pre>
 </div>
 </div>
 <p>For my network, the index of the output corresponds to the unit we are talking about, with a 1 meaning keep the unit in the subnetwork, and a 0 meaning drop the unit from the subnetwork. If I did this for 3 samples, I may get 3 subnetworks like the following:</p>
@@ -220,7 +220,7 @@ p_{\text{keep}} = 1 - p_{\text{drop}}
 <img src="Dropout-3.jpg" width="700">
 </center>
 <p>The next thing I wanted to look at was the distribution of dropped units across all the subnetworks. When doing this I noticed that my small example network is misleading in that it has a fairly high probability for all units to be dropped in a subnetwork, which would mean no subnetwork. This is not the case for networks that would be used in practice. The plots below show the results of two original networks with 4 units and 100 units, respectively, with the dropout recipe applied 1000 times for <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mtext mathvariant="normal">drop</mtext></msub><mo>=</mo><mn>0.5</mn></mrow><annotation encoding="application/x-tex">p_{\text{drop}} = 0.5</annotation></semantics></math>.</p>
-<div id="cell-6" class="cell" data-execution_count="306">
+<div id="cell-6" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
@@ -280,7 +280,7 @@ p_{\text{keep}} = 1 - p_{\text{drop}}
 </div>
 <p>It is easier to see from the histograms that for more realistic numbers of units, the probability of all units being dropped is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>p</mi><mtext mathvariant="normal">drop</mtext><mn>100</mn></msubsup><mo>=</mo><mn>7.889</mn><mo>×</mo><msup><mn>10</mn><mrow><mi>−</mi><mn>31</mn></mrow></msup></mrow><annotation encoding="application/x-tex">p_{\text{drop}}^{100} = 7.889\times 10^{-31}</annotation></semantics></math>, which is essentially 0.</p>
 <p>The last thing I want to address in this section is how this process looks in code. Using PyTorch on my example network with 5 samples:</p>
-<div id="cell-8" class="cell" data-execution_count="353">
+<div id="cell-8" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">12</span>)</span>
@@ -313,7 +313,7 @@ tensor([[-0.0000, -0.5664,  0.3843, -0.0000],
 </div>
 <p>I can see that the output without and with dropout is as expected. In the former case, given that all samples have the same values, I would expect each unit’s activation output to be the same value for each sample, which is indeed what I see. For the latter case, I would expect the same activation outputs but that some of them have been zeroed out which is the case; if the seed value is removed, rerunning the code will show the randomness of which units are dropped. The fact that the same activations are not output when dropout was introduced leads me to the next topic: activation scaling.</p>
 <p>But before moving I want to check if this dropout layer gives me the same statistics as the Bernoulli function. The plot below shows that this does seem to be the case</p>
-<div id="cell-10" class="cell" data-execution_count="362">
+<div id="cell-10" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>counts <span class="op">=</span> []</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1000</span>):</span>
